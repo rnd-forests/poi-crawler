@@ -1,0 +1,42 @@
+.pointer {
+  cursor: pointer;
+}
+
+.scroll-x {
+  overflow-x: scroll;
+}
+
+.w {
+  &-150px {
+    width: 150px;
+  }
+
+  &-1_5 {
+    width: 1.5rem;
+  }
+}
+
+.w-100px {
+  width: 100px;
+}
+
+.h {
+  &-1_5 {
+    height: 1.5rem;
+  }
+}
+
+.avatar {
+  &-64 {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/*prevent bootstrap-vue css conflict*/
+.v-select.dropdown .dropdown-toggle::after {
+  content: inherit;
+}
+.v-select.dropdown .form-control {
+  height: inherit;
+}
