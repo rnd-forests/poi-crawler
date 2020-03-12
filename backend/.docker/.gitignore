@@ -1,6 +1,5 @@
 .env.*
 !.env.example
-modules
 modules.*
 !modules.example
 .cache
