@@ -1,0 +1,120 @@
+version: '3'
+
+services:
+  akinia-crawler-storage:
+    image: tianon/sleeping-beauty
+    container_name: akinia-crawler-storage-stack
+    depends_on:
+      - mysql
+      - redis
+      - mongo
+
+  akinia-crawler:
+    image: tianon/sleeping-beauty
+    container_name: akinia-crawler-stack
+    depends_on:
+      - akinia-crawler-php-fpm
+      - akinia-crawler-nginx
+      - akinia-crawler-workspace
+      - akinia-crawler-storage
+
+  akinia-crawler-php-fpm:
+    image: vinhnguyen1512/laravel-php-fpm
+    restart: always
+    container_name: akinia-crawler-php-fpm
+    volumes:
+      - ${PROJECT_ROOT}:/var/www/app
+    expose:
+      - "9000"
+    depends_on:
+      - akinia-crawler-workspace
+    environment:
+      XDEBUG_HOST: ${XDEBUG_HOST}
+      XDEBUG_PORT: ${XDEBUG_PORT:-9000}
+      XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-docker}
+    networks:
+      - akinia
+
+  akinia-crawler-nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: akinia/nginx
+    restart: always
+    container_name: akinia-crawler-nginx
+    volumes:
+      - ./nginx/base:/etc/nginx/conf.d
+      - ./nginx/common:/etc/nginx/common
+      - db-data:/var/lib/mysql
+      - ${PROJECT_ROOT}:/var/www/app
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - akinia-crawler-php-fpm
+    networks:
+      - akinia
+
+  akinia-crawler-workspace:
+    image: vinhnguyen1512/laravel-workspace
+    restart: always
+    container_name: akinia-crawler-workspace
+    volumes:
+      - ${PROJECT_ROOT}:/var/www/app
+    networks:
+      - akinia
+    tty: true
+
+  mysql:
+    image: mysql:5.7
+    hostname: mysql
+    restart: always
+    container_name: akinia-crawler-mysql
+    volumes:
+      - db-data:/var/lib/mysql
+    expose:
+      - "3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    networks:
+      - akinia
+
+  redis:
+    image: redis:alpine
+    hostname: redis
+    restart: always
+    container_name: akinia-crawler-redis
+    volumes:
+      - redis-data:/data
+    networks:
+      - akinia
+
+  mongo:
+    image: mongo:4.2-bionic
+    container_name: mongo
+    restart: always
+    ports:
+      - 27020:27017
+    environment:
+      MONGO_INITDB_DATABASE: akinia_crawler
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - ./mongo-init/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
+      - mongodata:/data/db
+    networks:
+      - akinia
+
+networks:
+  akinia:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
+  redis-data:
+    driver: local
+  mongodata:
+    driver: local
