@@ -70,11 +70,11 @@
 
 <script>
 import userService from '@/services/userService'
-import bFormGroup from 'bootstrap-vue/es/components/form-group/form-group'
+import BFormGroup from 'bootstrap-vue'
 
 export default {
   components: {
-    bFormGroup,
+    BFormGroup,
   },
   data: () => ({
     loading: false,

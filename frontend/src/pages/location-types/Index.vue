@@ -65,7 +65,7 @@
 
 <script>
 import service from 'services/locationTypeService'
-import bModal from 'bootstrap-vue/es/components/modal/modal'
+import BModal from 'bootstrap-vue'
 import { slugify } from 'utils/common'
 
 // It must be a function: https://github.com/vuejs/vue/issues/702
@@ -78,7 +78,7 @@ const initialType = () => ({
 
 export default {
   components: {
-    bModal,
+    BModal,
   },
 
   data: () => ({

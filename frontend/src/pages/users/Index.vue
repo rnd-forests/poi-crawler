@@ -45,11 +45,11 @@
 
 <script>
 import service from 'services/userService'
-import bPagination from 'bootstrap-vue/es/components/pagination/pagination'
+import BPagination from 'bootstrap-vue'
 
 export default {
   components: {
-    bPagination,
+    BPagination,
   },
 
   data: () => ({

@@ -145,7 +145,7 @@ import service from 'services/locationService'
 import userService from 'services/userService'
 import areaService from 'services/areaService'
 import typeService from 'services/locationTypeService'
-import bPagination from 'bootstrap-vue/es/components/pagination/pagination'
+import BPagination from 'bootstrap-vue'
 // import role from 'mixins/role'
 import formatting from 'mixins/formatting'
 
@@ -153,7 +153,7 @@ export default {
   mixins: [formatting],
 
   components: {
-    bPagination,
+    BPagination,
     vSelect,
   },
 

@@ -96,7 +96,7 @@ services:
     container_name: mongo
     restart: always
     ports:
-      - 27020:27017
+      - '27017-27019:27017-27019'
     environment:
       MONGO_INITDB_DATABASE: akinia_crawler
       MONGO_INITDB_ROOT_USERNAME: admin
